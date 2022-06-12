@@ -13,11 +13,11 @@
     {!! session()->get('error1') !!}
 </div>
 @endif
-<h1>Add Order No.</h1>
+<h1>Add Size</h1>
 <form action="{{ route('add_order_no') }}" method="POST">
     @csrf
     <div class="form-group">
-        <input class="form-control" type="number" name="order_no" placeholder="Order No." required>
+        <input class="form-control" type="number" name="order_no" placeholder="Size" required>
     </div>
     <button type="submit" class="btn btn-success btn-lg">
         Add
@@ -26,11 +26,11 @@
 
 </div>
 <div class="col-lg-6">
-    <h1>Order No</h1>
+    <h1>Size</h1>
 <table class="table table-responsive table-striped table-hover">
 <tr>
     <th>#</th>
-    <th>Order No</th>
+    <th>Size</th>
     <th>Actions</th>
 </tr>
 @foreach (\App\Models\Order_no::all() as $order)

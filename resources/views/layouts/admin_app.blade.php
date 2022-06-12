@@ -58,7 +58,7 @@
                         <a href="{{ route('add_bike') }}"><i class="fa fa-fw fa-plus"></i> Add Bike</a>
                     </li>
                     <li>
-                        <a href="{{ route('add_order_no') }}"><i class="fa fa-fw fa-plus"></i> Add Order No.</a>
+                        <a href="{{ route('add_order_no') }}"><i class="fa fa-fw fa-plus"></i> Add Size</a>
                     </li>
                     <li>
                         <a href="{{ route('bill') }}"><i class="fa fa-fw fa-file"></i> Bill</a>

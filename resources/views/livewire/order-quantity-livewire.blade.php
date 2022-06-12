@@ -1,14 +1,43 @@
 <div>
-    <table class="table table-responsive table-striped table-hover">
+    <div style="border:5px solid black;border-radius:0.50rem;padding:20px">
+    @foreach ($customer as $customers)
+    @if (count(\App\Models\Order::where('order_name','=',$customers->name)->get()) == 0)
+        
+    @else
+    <?php
+    $e6 = [];
+    $o6 = [];
+    $e7 = [];
+    $o7 = [];
+    foreach (\App\Models\Order::where('order_name','=',$customers->name)->get() as $p) {
+            if ($p->id % 2 == 0) {
+                array_push($e6, $p->total_price);
+            } else {
+                array_push($o6, $p->total_price);
+            }
+        }
+        foreach (\App\Models\UserOrder::where('orders.order_name','=',$customers->name)
+        ->join('orders','orders.id','=','user_orders.order_id')->select('user_orders.*')->get() as $q) {
+            if ($q->id % 2 == 0) {
+                array_push($e7, $q->order_countity);
+            } else {
+                array_push($o7, $q->order_countity);
+            }
+        }
+        $e6 = array_sum($e6);
+        $o6 = array_sum($o6);
+        $e7 = array_sum($e7);
+        $o7 = array_sum($o7);
+    ?>
+        <h1>{{$customers->name}}</h1>
+        
+        <table class="table table-responsive table-striped table-hover">
         <tr>
             <th>
                 #
             </th>
             <th>
                 Bike Name
-            </th>
-            <th>
-                Customer
             </th>
             <th>
                 Each Price
@@ -29,14 +58,14 @@
             </th>
         </tr>
         <?php $id3 =1;?>
-        @foreach ($orders as $order)
+        @foreach (\App\Models\Order::where('order_name','=',$customers->name)->get() as $order)
         <?php
     ${"quantity$order->id"} = [];
     ?>
         <tr>
             <td>{{ $id3 }}</td>
             <td>{{ $order->bike_name }}</td>
-            <td>{{ $order->order_name }}</td>
+            
             <td>{{ $order->price }}</td>
             @foreach (\App\Models\UserOrder::where('user_orders.order_id','=',$order->id)
             ->select('user_orders.*')
@@ -83,8 +112,18 @@
         @endforeach
     </table>
     <div class="bg-secondary p-4 text-right">
+        <h3>Total Price: <span style="color: green">{{ (int)$e6 + (int)$o6 }}</span></h3>
+        <h3>Total Quantity: <span style="color: green">{{ (int)$e7 + (int)$o7 }}</span></h3>
+        <h3>Total Orders: <span style="color: green">{{ count(\App\Models\Order::where('order_name','=',$customers->name)->get()) }}</span></h3>
+    </div>
+    <hr>
+    @endif
+    @endforeach
+    </div>
+    <div class="bg-secondary p-4 text-right">
         <h3>Total Price: <span style="color: green">{{ (int)$e1 + (int)$o1 }}</span></h3>
         <h3>Total Quantity: <span style="color: green">{{ (int)$e2 + (int)$o2 }}</span></h3>
         <h3>Total Orders: <span style="color: green">{{ count($orders) }}</span></h3>
     </div>
+    
 </div>

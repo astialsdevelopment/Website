@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Order;
 use App\Models\UserOrder;
+use App\Models\Customer;
 use Livewire\Component;
 
 class OrderQuantityLivewire extends Component
@@ -33,7 +34,8 @@ class OrderQuantityLivewire extends Component
         $this->e2 = array_sum($this->e2);
         $this->o2 = array_sum($this->o2);
         return view('livewire.order-quantity-livewire')->with([
-            'orders' => Order::all(),
+            'customer' => Customer::all(),
+            'orders' => Customer::all(),
         ]);
     }
 }

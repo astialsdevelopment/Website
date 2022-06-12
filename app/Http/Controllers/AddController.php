@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Bikes;
 use App\Models\Order_no;
+use App\Models\UserOrder;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class AddController extends Controller
@@ -28,6 +30,14 @@ class AddController extends Controller
         Order_no::create(request()->all());
         session()->flash('done1', 'SuccessFully <b>ADDED</b>');
         }
+        foreach(Order::all() as $p){
+            
+            UserOrder::create([
+                'order_id' => $p->id,
+                'order_no' => request()->order_no,
+                'order_countity' => 0,
+            ]);
+    }
         return redirect()->back();
     }
 }
