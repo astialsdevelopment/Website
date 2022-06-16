@@ -92,27 +92,32 @@
             </td>
             <td>
                 <h4>₹ <span style="color:green">
-                <?php
+                        <?php
                 if($order->total_price >= $order->bill && $order->bill != 0){
                 echo $order->total_price - $order->bill;
                 }else{
                     echo $order->total_price;
                 }    
                 ?>
-                </span></h4>
+                    </span></h4>
             </td>
-            <td>             
-                {{-- <input id="bill_fill" style="display: none" type="number"wire wire:model="bill_fill"> --}}
+            <td>
+                {{-- <input id="bill_fill" style="display: none" type="number" wire wire:model="bill_fill"> --}}
                 @if ($order->status == true)
-                    <h4 class="text-success">Payment Completed</h4>
+                <h4 class="text-success">Payment Completed</h4>
                 @else
-                <input id="bill_fill{{ $order->id }}" class="form-control" type="number" min="0.0" placeholder="{{ $order->bill }}" value="">
-                <button class="btn btn-primary" type="button" wire:click="bill_status({{ \App\Models\Bill::where("invoice","=",$order->id)->first()->status }},$('#bill_fill{{ $order->id }}').val(),{{ \App\Models\Bill::where("invoice","=",$order->id)->first()->id }})">
-                        Press
+                <input id="bill_fill{{ $order->id }}" class="form-control" type="number" min="0.0"
+                    placeholder="{{ $order->bill }}" value="" required>
+                <input id="bill_date{{ $order->id }}" class="form-control" type="date" value="">
+                <button class="btn btn-primary" type="button" wire:click="bill_status(
+                    {{ \App\Models\Bill::where('invoice',"=",$order->id)->first()->status }},$('#bill_fill{{ $order->id }}').val(),
+                    $('#bill_date{{ $order->id }}').val(),
+                    {{ \App\Models\Bill::where('invoice',"=",$order->id)->first()->id }})">
+                    Press
                 </button>
-                @endif                
-                
-                
+                @endif
+
+
                 {{-- <label class="switch">
                     <input type="checkbox" id="set_status" onclick="st()" @if (\App\Models\Bill::where('invoice','=',$order->id)->first()->status == true)
                             checked
@@ -136,5 +141,4 @@
     </div>
 </div>
 {{-- <script>
-    document.getElementById('hero').style.width = screen.width;
-</script> --}}
+    document.getElementById(' hero').style.width=screen.width; </script> --}}

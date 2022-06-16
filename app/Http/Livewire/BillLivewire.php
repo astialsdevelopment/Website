@@ -41,13 +41,13 @@ class BillLivewire extends Component
             'orders.order_name' => $name,
         ])
             ->join('bills', 'bills.invoice', '=', 'orders.id')
-            ->select('orders.*','bills.*')
+            ->select('orders.*', 'bills.*')
             ->get();
         foreach (Order::where([
             'orders.order_name' => $name,
         ])
             ->join('bills', 'bills.invoice', '=', 'orders.id')
-            ->select('orders.*','bills.bill as bill')
+            ->select('orders.*', 'bills.bill as bill')
             ->get() as $p) {
             if ($p->id % 2 == 0) {
                 array_push($this->e1, $p->bill);
@@ -60,19 +60,19 @@ class BillLivewire extends Component
             'orders.order_name' => $name,
         ])
             ->join('bills', 'bills.invoice', '=', 'orders.id')
-            ->select('orders.*','bills.bill as bill')
+            ->select('orders.*', 'bills.bill as bill')
             ->get() as $p) {
             if ($p->id % 2 == 0) {
-                if($p->total_price >= $p->bill && $p->bill != 0){
-                $swq = $p->total_price - $p->bill;
-                }else{
+                if ($p->total_price >= $p->bill && $p->bill != 0) {
+                    $swq = $p->total_price - $p->bill;
+                } else {
                     $swq = $p->total_price;
                 }
                 array_push($this->e3, $swq);
             } else {
-                if($p->total_price >= $p->bill && $p->bill != 0){
-                $swq2 = $p->total_price - $p->bill;
-                }else{
+                if ($p->total_price >= $p->bill && $p->bill != 0) {
+                    $swq2 = $p->total_price - $p->bill;
+                } else {
                     $swq2 = $p->total_price;
                 }
                 array_push($this->o3, $swq2);
@@ -83,7 +83,7 @@ class BillLivewire extends Component
             'orders.order_name' => $name,
         ])
             ->join('bills', 'bills.invoice', '=', 'orders.id')
-            ->select('orders.*','bills.bill as bill')
+            ->select('orders.*', 'bills.bill as bill')
             ->get() as $p) {
             if ($p->id % 2 == 0) {
                 array_push($this->e4, $p->total_price);
@@ -114,29 +114,41 @@ class BillLivewire extends Component
             'customer_name' => $name,
         ]);
     }
-    public function bill_status($status,$bill_fill, $id)
+    public function bill_status($status, $bill_fill, $bill_date, $id)
     {
-        // dd($bill_fill);
-        $d = Bill::where('id','=',$id)->first();
+        $date = $bill_date;
 
-        if($d->bill >= $bill_fill){
-        Bill::where('id','=',$id)->update([
-            'bill'=> $d->bill - $bill_fill,
-        ]);
-        PaymentDate::create([
-            'payment_date'=>date('<b>d/m/y</b> , <b>h:m:s a</b>'),
-            'payment'=>$bill_fill,
-            'invoice'=>$d->invoice,
-            'customer'=>$d->customer
-        ]);
-        if($d->bill == $bill_fill){
-            Bill::where('id','=',$id)->update([
-                'status'=> true,
+
+        $d = Bill::where('id', '=', $id)->first();
+
+        if ($d->bill >= $bill_fill) {
+
+            Bill::where('id', '=', $id)->update([
+                'bill' => $d->bill - $bill_fill,
             ]);
-        }
+            if ($bill_date != null) {
+
+                PaymentDate::create([
+                    'payment_date' => $date,
+                    'payment' => $bill_fill,
+                    'invoice' => $d->invoice,
+                    'customer' => $d->customer,
+                ]);
+            } else if ($bill_date == null) {
+                PaymentDate::create([
+                    'payment_date' => date('yy-m-d'),
+                    'payment' => $bill_fill,
+                    'invoice' => $d->invoice,
+                    'customer' => $d->customer
+                ]);
+            }
+            if ($d->bill == $bill_fill) {
+                Bill::where('id', '=', $id)->update([
+                    'status' => true,
+                ]);
+            }
         }
 
         $this->render();
     }
-
 }

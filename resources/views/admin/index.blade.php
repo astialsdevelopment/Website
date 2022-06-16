@@ -80,7 +80,7 @@ $o3=[];
             <div class="row">
                 <div class="col-lg-6">
                     <h1>₹ <span>{{ (int)$j3 + (int)$q3 }}</span></h1>
-                    <h2><span style="color: green">To Collect </span> <i class="fa fa-arrow-down"
+                    <h2><span style="color: green">Received </span> <i class="fa fa-arrow-down"
                             style="color: green;float: right;"></i>
                     </h2>
                 </div>
@@ -98,7 +98,7 @@ $o3=[];
             <div class="row">
                 <div class="col-lg-6">
                     <h1>₹ <span>{{ (int)$e1 + (int)$o1 }}</span></h1>
-                    <h2><span style="color: red">Received </span> <i class="fa fa-arrow-down"
+                    <h2><span style="color: red">To Collect </span> <i class="fa fa-arrow-down"
                             style="color: red;float: right;"></i>
                     </h2>
                 </div>
