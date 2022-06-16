@@ -89,10 +89,14 @@
 
                 <!-- Page Heading -->
                 <div class="row">
-                    <form action="{{ route('logout') }}" method="POST">
+                    <form style="z-index: 9999;position: fixed;float: right" action="{{ route('logout') }}"
+                        method="POST">
                         @csrf
                         <button style="float: right" class="btn btn-lg btn-light" type="submit">Logout</button>
                     </form>
+                    <br>
+                    <br>
+                    <br>
                     <div class="col-lg-12">
                         @yield('content')
                     </div>
@@ -107,7 +111,11 @@
 
     </div>
     <!-- /#wrapper -->
-
+    <script>
+        function change_location(url){
+        window.location = url;
+    }
+    </script>
     <!-- jQuery -->
     <script src="/js/jquery.js"></script>
 
