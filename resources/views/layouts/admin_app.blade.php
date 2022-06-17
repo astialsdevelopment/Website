@@ -42,7 +42,8 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ route('admin') }}">Ashish Automobiles</a>
+                <a class="navbar-brand" href="{{ route('admin') }}">Ashish Auto Agency <span
+                        style="font-size: 30px;color:red">AAA</span></a>
             </div>
 
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
@@ -52,7 +53,7 @@
                         <a href="{{ route('add_customer') }}"><i class="fa fa-fw fa-plus"></i> Add Customer</a>
                     </li>
                     <li>
-                        <a href="{{ route('orders') }}"><i class="fa fa-plus"></i> Invoice</a>
+                        <a href="{{ route('orders') }}"><i class="fa fa-plus"></i> Orders</a>
                     </li>
                     <li>
                         <a href="{{ route('add_bike') }}"><i class="fa fa-fw fa-plus"></i> Add Bike</a>

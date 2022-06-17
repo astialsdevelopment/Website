@@ -23,41 +23,37 @@ class InvoiceController extends Controller
         $orders = Order::where([
             'orders.order_name' => $name,
         ])
-            ->join('bills', 'bills.invoice', '=', 'orders.id')
-            ->select('orders.*','bills.*')
+            ->join('bills', 'bills.customer', '=', 'orders.order_name')
+            ->select('orders.*', 'bills.*')
             ->get();
-        foreach (Order::where([
-            'orders.order_name' => $name,
+        foreach (Customer::where([
+            'customers.name' => $name,
             'bills.status' => false,
         ])
-            ->join('bills', 'bills.invoice', '=', 'orders.id')
-            ->select('orders.*','bills.bill as bill')
+            ->join('bills', 'bills.customer', '=', 'customers.name')
+            ->select('customers.*', 'bills.bill as bill')
             ->get() as $p) {
-            if ($p->id % 2 == 0) {
-                array_push($e1, $p->bill);
-            } else {
-                array_push($o1, $p->bill);
-            }
+            array_push($e1, $p->bill);
         }
 
-        foreach (Order::where([
-            'orders.order_name' => $name,
+        foreach (Customer::where([
+            'customers.name' => $name,
         ])
-            ->join('bills', 'bills.invoice', '=', 'orders.id')
-            ->select('orders.*','bills.bill as bill')
+            ->join('bills', 'bills.customer', '=', 'customers.name')
+            ->select('customers.*', 'bills.bill as bill')
             ->get() as $p) {
             if ($p->id % 2 == 0) {
-                if($p->total_price >= $p->bill && $p->bill != 0){
-                $swq = $p->total_price - $p->bill;
-                }else{
-                    $swq = $p->total_price;
+                if ($p->total_bill >= $p->bill && $p->bill != 0) {
+                    $swq = $p->total_bill - $p->bill;
+                } else {
+                    $swq = $p->total_bill;
                 }
                 array_push($e3, $swq);
             } else {
-                if($p->total_price >= $p->bill && $p->bill != 0){
-                $swq2 = $p->total_price - $p->bill;
-                }else{
-                    $swq2 = $p->total_price;
+                if ($p->total_bill >= $p->bill && $p->bill != 0) {
+                    $swq2 = $p->total_bill - $p->bill;
+                } else {
+                    $swq2 = $p->total_bill;
                 }
                 array_push($o3, $swq2);
             }
@@ -66,8 +62,8 @@ class InvoiceController extends Controller
         foreach (Order::where([
             'orders.order_name' => $name,
         ])
-            ->join('bills', 'bills.invoice', '=', 'orders.id')
-            ->select('orders.*','bills.bill as bill')
+            ->join('bills', 'bills.customer', '=', 'orders.order_name')
+            ->select('orders.*', 'bills.bill as bill')
             ->get() as $p) {
             if ($p->id % 2 == 0) {
                 array_push($e4, $p->total_price);
@@ -93,25 +89,26 @@ class InvoiceController extends Controller
         $q3 = array_sum($o3);
         $j4 = array_sum($e4);
         $q4 = array_sum($o4);
-    $data = Customer::where('id', '=', $id)->first();
-    return view('invoice')->with([
-        'data'=>$data,
-        'j1'=>$j1,
-        'q1'=>$q1,
-        'j2'=>$j2,
-        'q2'=>$q2,
-        'j3'=>$j3,
-        'q3'=>$q3,
-        'j4'=>$j4,
-        'q4'=>$q4,
-        'orders' => $orders,
-    ]);
+        $data = Customer::where('id', '=', $id)->first();
+        return view('invoice')->with([
+            'data' => $data,
+            'j1' => $j1,
+            'q1' => $q1,
+            'j2' => $j2,
+            'q2' => $q2,
+            'j3' => $j3,
+            'q3' => $q3,
+            'j4' => $j4,
+            'q4' => $q4,
+            'orders' => $orders,
+            'name' => $name,
+        ]);
     }
 
     public function payment_date($id)
     {
         return view('admin.payment_date')->with([
-            'id'=>$id
+            'id' => $id
         ]);
     }
 }

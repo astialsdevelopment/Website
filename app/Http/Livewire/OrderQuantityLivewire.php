@@ -35,7 +35,14 @@ class OrderQuantityLivewire extends Component
         $this->o2 = array_sum($this->o2);
         return view('livewire.order-quantity-livewire')->with([
             'customer' => Customer::all(),
-            'orders' => Customer::all(),
+            'orders' => Order::where('bills.status', '=', false)->join(
+                'bills',
+                'bills.customer',
+                '=',
+                'orders.order_name'
+            )
+                ->select('orders.*')
+                ->get(),
         ]);
     }
 }

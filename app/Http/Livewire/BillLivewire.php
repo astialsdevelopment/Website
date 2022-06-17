@@ -40,14 +40,15 @@ class BillLivewire extends Component
         $orders = Order::where([
             'orders.order_name' => $name,
         ])
-            ->join('bills', 'bills.invoice', '=', 'orders.id')
-            ->select('orders.*', 'bills.*')
+            ->join('bills', 'bills.customer', '=', 'orders.order_name')
+            ->select('orders.*', 'bills.bill')
             ->get();
-        foreach (Order::where([
-            'orders.order_name' => $name,
+
+        foreach (Customer::where([
+            'customers.name' => $name,
         ])
-            ->join('bills', 'bills.invoice', '=', 'orders.id')
-            ->select('orders.*', 'bills.bill as bill')
+            ->join('bills', 'bills.customer', '=', 'customers.name')
+            ->select('bills.bill as bill')
             ->get() as $p) {
             if ($p->id % 2 == 0) {
                 array_push($this->e1, $p->bill);
@@ -56,33 +57,25 @@ class BillLivewire extends Component
             }
         }
 
-        foreach (Order::where([
-            'orders.order_name' => $name,
+        foreach (Customer::where([
+            'customers.name' => $name,
         ])
-            ->join('bills', 'bills.invoice', '=', 'orders.id')
-            ->select('orders.*', 'bills.bill as bill')
+            ->join('bills', 'bills.customer', '=', 'customers.name')
+            ->select('bills.bill as bill', 'customers.total_bill')
             ->get() as $p) {
-            if ($p->id % 2 == 0) {
-                if ($p->total_price >= $p->bill && $p->bill != 0) {
-                    $swq = $p->total_price - $p->bill;
-                } else {
-                    $swq = $p->total_price;
-                }
-                array_push($this->e3, $swq);
+
+            if ($p->total_bill >= $p->bill && $p->bill != 0) {
+                $swq = $p->total_bill - $p->bill;
             } else {
-                if ($p->total_price >= $p->bill && $p->bill != 0) {
-                    $swq2 = $p->total_price - $p->bill;
-                } else {
-                    $swq2 = $p->total_price;
-                }
-                array_push($this->o3, $swq2);
+                $swq = $p->total_bill;
             }
+            array_push($this->e3, $swq);
         }
 
         foreach (Order::where([
             'orders.order_name' => $name,
         ])
-            ->join('bills', 'bills.invoice', '=', 'orders.id')
+            ->join('bills', 'bills.customer', '=', 'orders.order_name')
             ->select('orders.*', 'bills.bill as bill')
             ->get() as $p) {
             if ($p->id % 2 == 0) {
@@ -112,41 +105,47 @@ class BillLivewire extends Component
         return view('livewire.bill-livewire')->with([
             'orders' => $orders,
             'customer_name' => $name,
+            'customer' => Customer::where('customers.id', '=', $this->id2)->join('bills', 'bills.customer', '=', 'customers.name')->select('customers.*', 'bills.bill')->first(),
         ]);
     }
-    public function bill_status($status, $bill_fill, $bill_date, $id)
+    public function bill_status($bill_fill, $bill_date)
     {
+        // dd
+        $name = Customer::where('id', '=', $this->id2)->first()->name;
+
         $date = $bill_date;
 
 
-        $d = Bill::where('id', '=', $id)->first();
+        $d = Bill::where('customer', '=', $name)->first();
 
         if ($d->bill >= $bill_fill) {
 
-            Bill::where('id', '=', $id)->update([
+            Bill::where('customer', '=', $name)->update([
                 'bill' => $d->bill - $bill_fill,
             ]);
             if ($bill_date != null) {
-
                 PaymentDate::create([
                     'payment_date' => $date,
                     'payment' => $bill_fill,
-                    'invoice' => $d->invoice,
-                    'customer' => $d->customer,
+                    'invoice' => 0,
+                    'customer' => $name,
                 ]);
             } else if ($bill_date == null) {
                 PaymentDate::create([
-                    'payment_date' => date('yy-m-d'),
+                    'payment_date' => date('Y-m-d'),
                     'payment' => $bill_fill,
-                    'invoice' => $d->invoice,
-                    'customer' => $d->customer
+                    'invoice' => 0,
+                    'customer' => $name
                 ]);
             }
             if ($d->bill == $bill_fill) {
-                Bill::where('id', '=', $id)->update([
+                Bill::where('customer', '=', $name)->update([
                     'status' => true,
                 ]);
             }
+            session()->flash('done', 'Successfully Updated');
+        } else {
+            session()->flash('error', 'This is not the correct bill');
         }
 
         $this->render();

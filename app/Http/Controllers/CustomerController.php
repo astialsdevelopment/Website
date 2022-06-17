@@ -15,7 +15,10 @@ class CustomerController extends Controller
         if (count(Customer::where('address', '=', request()->address)->get()) !== 0) {
             session()->flash('error4', 'This <b>Customer Address</b> Already Exists.');
         }
-        if (count(Customer::where('address', '=', request()->address)->get()) == 0 && count(Customer::where('mobile', '=', request()->mobile)->get()) == 0) {
+        if (strlen(request()->mobile) != 10) {
+            session()->flash('error5', 'This <b>Customer Mobile No.</b> is Invalid.');
+        }
+        if (count(Customer::where('address', '=', request()->address)->get()) == 0 && count(Customer::where('mobile', '=', request()->mobile)->get()) == 0 && strlen(request()->mobile) == 10) {
             Customer::create(request()->all());
             session()->flash('done3', 'The Customer Successfully Inserted.');
         }

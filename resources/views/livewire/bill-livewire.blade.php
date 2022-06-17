@@ -1,5 +1,23 @@
 <div>
     <a class="btn btn-success btn-lg" href="{{ route('invoice',['id'=>$id2]) }}">Print</a>
+    <br>
+    <br>
+    @if (session()->has('error'))
+    <div class="alert alert-danger">
+        {{ session()->get('error') }}
+    </div>
+    <br>
+    @endif
+    @if (session()->has('done'))
+    <div id="done" class="alert alert-success">
+        {{ session()->get('done') }}
+    </div>
+    <br>
+    @endif
+    <input class="form-control" type="number" id="bill_fill" placeholder="{{ $customer->bill }}">
+    <input class="form-control" type="date" id="bill_date" placeholder="Date">
+    <button class="btn btn-primary btn-lg" type="button"
+        wire:click="bill_status($('#bill_fill').val(),$('#bill_date').val())">Modify</button>
     <table style="overflow-x: scroll" id="hero" class="table table-responsive table-striped table-hover">
         <tr>
             <th>
@@ -27,15 +45,6 @@
             </th>
             <th>
                 Total Quantity
-            </th>
-            <th>
-                Collect Bill
-            </th>
-            <th>
-                Receive Bill
-            </th>
-            <th>
-                Paid
             </th>
         </tr>
         <?php $id3 =1;?>
@@ -87,47 +96,6 @@
                     .pcs
                 </h4>
             </td>
-            <td>
-                <h4>₹ <span style="color:green">{{ $order->bill }}</span></h4>
-            </td>
-            <td>
-                <h4>₹ <span style="color:green">
-                        <?php
-                if($order->total_price >= $order->bill && $order->bill != 0){
-                echo $order->total_price - $order->bill;
-                }else{
-                    echo $order->total_price;
-                }    
-                ?>
-                    </span></h4>
-            </td>
-            <td>
-                {{-- <input id="bill_fill" style="display: none" type="number" wire wire:model="bill_fill"> --}}
-                @if ($order->status == true)
-                <h4 class="text-success">Payment Completed</h4>
-                @else
-                <input id="bill_fill{{ $order->id }}" class="form-control" type="number" min="0.0"
-                    placeholder="{{ $order->bill }}" value="" required>
-                <input id="bill_date{{ $order->id }}" class="form-control" type="date" value="">
-                <button class="btn btn-primary" type="button" wire:click="bill_status(
-                    {{ \App\Models\Bill::where('invoice',"=",$order->id)->first()->status }},$('#bill_fill{{ $order->id }}').val(),
-                    $('#bill_date{{ $order->id }}').val(),
-                    {{ \App\Models\Bill::where('invoice',"=",$order->id)->first()->id }})">
-                    Press
-                </button>
-                @endif
-
-
-                {{-- <label class="switch">
-                    <input type="checkbox" id="set_status" onclick="st()" @if (\App\Models\Bill::where('invoice','=',$order->id)->first()->status == true)
-                            checked
-                        @endif
-                        wire:click="bill_status({{ \App\Models\Bill::where("invoice","=",$order->id)->first()->status }},
-                        {{ \App\Models\Bill::where("invoice","=",$order->id)->first()->id }})">
-                        <span class="slider round"></span>
-                    </label>
-                </form> --}}
-            </td>
         </tr>
         <?php $id3++;?>
         @endforeach
@@ -141,4 +109,5 @@
     </div>
 </div>
 {{-- <script>
-    document.getElementById(' hero').style.width=screen.width; </script> --}}
+    document.getElementById(' hero').style.width=screen.width; 
+</script> --}}

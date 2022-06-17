@@ -11,14 +11,13 @@ class PaymentDateLivewire extends Component
     public function render()
     {
 
-        $sw = PaymentDate::where('customers.id','=',$this->id2)
-        ->join('customers','customers.name','=','payment_dates.customer')
-        ->join('orders','orders.id','=','payment_dates.invoice')
-        ->select('payment_dates.*','orders.bike_name as two_wheeler')
-        ->latest()
-        ->get();
+        $sw = PaymentDate::where('customers.id', '=', $this->id2)
+            ->join('customers', 'customers.name', '=', 'payment_dates.customer')
+            ->select('payment_dates.*')
+            ->latest()
+            ->get();
         return view('livewire.payment-date-livewire')->with([
-            'dates'=>$sw,
+            'dates' => $sw,
         ]);
     }
 }

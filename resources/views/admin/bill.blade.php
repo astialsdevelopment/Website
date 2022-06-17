@@ -44,22 +44,23 @@ $id =1;
             <?php $e2 =[];$o2 =[];?>
             @foreach (\App\Models\Bill::where([
             'bills.customer'=>$bill->name,
-            ])->join('orders','orders.id','=','bills.invoice')
-            ->select('bills.*','orders.*')
+            ])
+            ->join('customers','customers.name','=','bills.customer')
+            ->select('bills.*','customers.*')
             ->get() as $p)
             <?php
             if($s->id % 2 == 0){
-                if($p->total_price >= $p->bill && $p->bill != 0){
-                $swq = $p->total_price - $p->bill;
+                if($p->total_bill >= $p->bill && $p->bill != 0){
+                $swq = $p->total_bill - $p->bill;
                 }else{
-                    $swq = $p->total_price;
+                    $swq = $p->total_bill;
                 }
                 array_push($e2,$swq);
             }else{
-                if($p->total_price >= $p->bill && $p->bill != 0){
-                $swq = $p->total_price - $p->bill;
+                if($p->total_bill >= $p->bill && $p->bill != 0){
+                $swq = $p->total_bill - $p->bill;
                 }else{
-                    $swq = $p->total_price;
+                    $swq = $p->total_bill;
                 }
                 array_push($o2,$swq);
             }
@@ -68,16 +69,15 @@ $id =1;
             {{ $j2 = array_sum($e2) + array_sum($o2) }}
         </td>
         <td>
-            @if ($j1 >= $j2) <span style="color:red">Loss</span>
-            @elseif($j1< $j2)
-            <span style="color:green">Profit</span>
-            @endif
+            @if ($j1 >= $j2 || $j1 != 0) <span style="color:red">Loss</span>
+            @elseif($j1 <= $j2&& $j1==0) <span style="color:green">Profit</span>
+                @endif
         </td>
         <td>{{ $j1 + $j2 }}</td>
         <td><a href="{{ route('bill_details',['id'=>$bill->id,'status'=>0]) }}"><i class="fa fa-eye"
                     style="color: dodgerblue"></i></a></td>
         <td><a href="{{ route('payment_date',['id'=>$bill->id,'status'=>0]) }}"><i class="fa fa-eye"
-                        style="color: dodgerblue"></i></a></td>
+                    style="color: dodgerblue"></i></a></td>
     </tr>
     <?php $id++ ?>
     @endforeach

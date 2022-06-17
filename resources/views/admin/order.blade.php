@@ -7,7 +7,7 @@
 @endif
 <a class="btn btn-primary btn-lg" href="{{ route('add_orders') }}">Add Orders</a>
 <br>
-<h1>Invoice</h1>
+<h1>Orders</h1>
 @livewire('order-quantity-livewire')
 @livewireScripts
 @endsection

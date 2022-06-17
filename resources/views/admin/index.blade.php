@@ -134,7 +134,11 @@ $o3=[];
             <div class="row">
                 <div class="col-lg-6">
                     <h1><span>{{
-                            count(\App\Models\Order::where('bills.status','=',false)->join('bills','bills.invoice','=','orders.id')->select('bills.*')->get())
+                            count($orders = \App\Models\Order::where('bills.status','=',false)->join('bills',
+                            'bills.invoice', '=',
+                            'orders.id')
+                            ->select('orders.*', 'bills.*')
+                            ->get())
                             }}</span></h1>
                     <h2><span style="color: black">Total Orders </span> <i class="fa fa-arrow-down"
                             style="color: black;float: right;"></i>

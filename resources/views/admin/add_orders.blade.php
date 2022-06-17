@@ -17,7 +17,7 @@
         <div class="form-group col-lg-6">
             <h1>Two Wheeler</h1>
             <input class="form-control" type="name" list="brow" name="bike_name" placeholder="Select Bike Name"
-                autocomplete="off">
+                autocomplete="off" required>
             <datalist id="brow">
                 {{-- <option value="">Select...</option> --}}
                 @foreach (\App\Models\Bikes::all() as $bike)
@@ -28,7 +28,7 @@
         <div class="form-group col-lg-6">
             <h1>Customer Name</h1>
             <input class="form-control" type="name" list="brow2" name="order_name" placeholder="Select Customer"
-                autocomplete="off">
+                autocomplete="off" required>
 
             <datalist id="brow2">
                 {{-- <option value="">Select...</option> --}}
@@ -38,8 +38,8 @@
             </datalist>
         </div>
         <div class="form-group col-lg-2">
-            <h1>Standart</h1>
-            <input class="form-control" id="std" type="text" name="std" placeholder="Standard" required>
+            <h1>Standard</h1>
+            <input class="form-control" id="std" type="number" name="std" placeholder="Standard" required>
 
         </div>
         @foreach (\App\Models\Order_no::all() as $order)
@@ -47,7 +47,7 @@
             <h1>{{ $order->order_no }}</h1>
             <input id="order_no" type="hidden" name="{{" order_no". $order->id }}" value="{{ $order->order_no }}">
             <input class="form-control" id="order_quantity" type="number" name="{{" order_quantity". $order->id }}"
-            value="">
+            value="0" min="0" required>
         </div>
 
         <script>

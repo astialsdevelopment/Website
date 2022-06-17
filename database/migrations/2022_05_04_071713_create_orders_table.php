@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('bike_name');
             $table->string('order_name');
-            $table->string('price');
-            $table->string('total_price');
+            $table->integer('price');
+            $table->integer('total_price');
             $table->string('std');
             $table->timestamps();
         });

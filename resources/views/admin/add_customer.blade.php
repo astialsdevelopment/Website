@@ -18,6 +18,11 @@
             {!! session()->get('error4') !!}
         </div>
         @endif
+        @if (session()->has('error5'))
+        <div class="alert alert-danger">
+            {!! session()->get('error5') !!}
+        </div>
+        @endif
         <h1>Add Customer</h1>
         <form action="{{ route('add_customer') }}" method="POST">
             @csrf
@@ -31,12 +36,13 @@
                 <div class="col-lg-6">
                     <div class="form-group">
                         <input class="form-control" type="number" name="mobile" placeholder="Customer Mobile No."
-                            value="{{ old('mobile') }}" required>
+                            maxlength="10" value="{{ old('mobile') }}" required>
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <textarea class="form-control" name="address" placeholder="Customer Address">{{ old('address') }}</textarea>
+                <textarea class="form-control" name="address"
+                    placeholder="Customer Address">{{ old('address') }}</textarea>
             </div>
             <button type="submit" class="btn btn-light btn-lg">
                 Add
@@ -46,31 +52,8 @@
     </div>
     <div class="col-lg-6">
         <h1>Customers</h1>
-        <table class="table table-responsive table-striped table-hover">
-            <tr>
-                <th>#</th>
-                <th>Customer Name</th>
-                <th>Actions</th>
-            </tr>
-            @foreach (\App\Models\Customer::all() as $customer)
-            <tr>
-                <td>{{ $id }}</td>
-                <td>{{ $customer->name }}</td>
-
-                <td>
-                    <form action="{{ route('delete_customer') }}" method="POST">
-                        @csrf
-                        <input name="id" type="hidden" value="{{ $customer->id }}">
-                        <button class="btn btn-danger" type="submit">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            <?php $id++;?>
-            @endforeach
-        </table>
-
+        @livewire('search-customer-livewire')
+        @livewireScripts()
     </div>
 </div>
 
