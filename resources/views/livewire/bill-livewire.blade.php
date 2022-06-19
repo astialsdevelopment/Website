@@ -14,10 +14,16 @@
     </div>
     <br>
     @endif
+    @if ($customer->status == 1)
+    <h1 style="color:green">Payment Completed</h1>
+    <br>
+
+    @else
     <input class="form-control" type="number" id="bill_fill" placeholder="{{ $customer->bill }}">
     <input class="form-control" type="date" id="bill_date" placeholder="Date">
     <button class="btn btn-primary btn-lg" type="button"
         wire:click="bill_status($('#bill_fill').val(),$('#bill_date').val())">Modify</button>
+    @endif
     <table style="overflow-x: scroll" id="hero" class="table table-responsive table-striped table-hover">
         <tr>
             <th>

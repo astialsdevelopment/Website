@@ -2,12 +2,18 @@
 
 namespace App\Http\Livewire;
 
+use App\Imports\CustomerImport;
 use App\Models\Customer;
+use Livewire\WithFileUploads;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SearchCustomerLivewire extends Component
 {
+    use WithFileUploads;
     public $search;
+    public $import_file;
+
     public function render()
     {
         if ($this->search == null) {
@@ -32,5 +38,11 @@ class SearchCustomerLivewire extends Component
         Customer::where('id', '=', $id)->delete();
         session()->flash('done2', 'SuccessFully <b>Deleted</b>');
         $this->render();
+    }
+
+    public function importData()
+    {
+        return Excel::import(new CustomerImport, $this->import_file);
+        dd('s');
     }
 }

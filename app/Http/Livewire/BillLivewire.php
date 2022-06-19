@@ -105,7 +105,7 @@ class BillLivewire extends Component
         return view('livewire.bill-livewire')->with([
             'orders' => $orders,
             'customer_name' => $name,
-            'customer' => Customer::where('customers.id', '=', $this->id2)->join('bills', 'bills.customer', '=', 'customers.name')->select('customers.*', 'bills.bill')->first(),
+            'customer' => Customer::where('customers.id', '=', $this->id2)->join('bills', 'bills.customer', '=', 'customers.name')->select('customers.*', 'bills.*')->first(),
         ]);
     }
     public function bill_status($bill_fill, $bill_date)

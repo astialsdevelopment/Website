@@ -51,6 +51,7 @@ class OrderController extends Controller
         if (count(Bill::where('customer', '=', request()->order_name)->get()) != 0) {
             $f = Bill::where('customer', '=', request()->order_name)->update([
                 'bill' => $sde * $d->price + $swaw->bill,
+                'status' => false,
             ]);
             $dwq2 = Customer::where('name', '=', request()->order_name)->first();
             $dwq = Customer::where('name', '=', request()->order_name)->update([

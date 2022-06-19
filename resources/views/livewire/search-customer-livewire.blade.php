@@ -4,8 +4,21 @@
         {!! session()->get('done2') !!}
     </div>
     @endif
+
+    @if (session()->has('error'))
+    <div class="alert alert-danger">
+        {!! session()->get('error') !!}
+    </div>
+    @endif
+    <form wire:submit.prevent="importData" enctype="multipart/form-data">
+        <input class="form-control" type="file" wire:model="import_file" accept="xlsx/*">
+        <br>
+        <button class="btn btn-primary btn-lg" type="submit">Import Data</button>
+    </form>
+    <br>
     <?php $id=1;?>
     <input class="form-control" type="text" wire:model="search" wire:keypress="search2" placeholder="Search.....">
+
     <table class="table table-responsive table-striped table-hover">
         <tr>
             <th>#</th>

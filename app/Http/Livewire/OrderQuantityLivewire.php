@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Order;
 use App\Models\UserOrder;
 use App\Models\Customer;
+use App\Models\Bill;
 use Livewire\Component;
 
 class OrderQuantityLivewire extends Component
@@ -15,18 +16,25 @@ class OrderQuantityLivewire extends Component
     public $o2 = [];
     public function render()
     {
-        foreach (Order::all() as $p) {
-            if ($p->id % 2 == 0) {
-                array_push($this->e1, $p->total_price);
-            } else {
-                array_push($this->o1, $p->total_price);
+        if (count(Bill::where('status', '=', false)->get()) != 0) {
+            foreach (Order::all() as $p) {
+                if ($p->id % 2 == 0) {
+                    array_push($this->e1, $p->total_price);
+                } else {
+                    array_push($this->o1, $p->total_price);
+                }
             }
-        }
-        foreach (UserOrder::all() as $q) {
-            if ($q->id % 2 == 0) {
-                array_push($this->e2, $q->order_countity);
-            } else {
-                array_push($this->o2, $q->order_countity);
+            foreach (UserOrder::where('bills.status', '=', false)
+                ->join('orders', 'orders.id', '=', 'user_orders.order_id')
+                ->join('bills', 'bills.customer', '=', 'orders.order_name')
+                ->select('user_orders.*')
+                ->get()
+                as $q) {
+                if ($q->id % 2 == 0) {
+                    array_push($this->e2, $q->order_countity);
+                } else {
+                    array_push($this->o2, $q->order_countity);
+                }
             }
         }
         $this->e1 = array_sum($this->e1);
